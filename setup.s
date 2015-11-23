@@ -45,9 +45,6 @@ go:	mov	ax,cs
 	mov	ax,#0x1301		! write string, move cursor
 	int	0x10
 
-!death_fuck:
-	!jmp death_fuck
-
 ! ok, the read went well so we get current cursor position and save it for
 ! posterity.
 
@@ -114,7 +111,7 @@ print_cur:
   int 0x10        
   mov ax,#SETUPSEG
   mov es,ax
-  mov cx,#16
+  mov cx,#11
   mov bx,#0x0007
   mov bp,#msg3
   mov ax,#0x1301
@@ -130,7 +127,7 @@ print_mem:
   mov ah,#0x03
   xor bh,bh
   int 0x10        
-  mov cx,#23
+  mov cx,#12
   mov bx,#0x0007
   mov bp,#msg4
   mov ax,#0x1301
@@ -139,31 +136,47 @@ print_mem:
   mov di,#0x02
   mov bx,(di)
   call print_bx
-  call print_nl
 
-  !loop3:
-	!jmp loop3
+  mov ah,#0x03
+  xor bh,bh
+  int 0x10 
+  mov cx,#2
+  mov bx,#0x0007
+  mov bp,#msg5
+  mov ax,#0x1301
+  int 0x10
+  call print_nl
 
 print_hd:
   mov ah,#0x03
   xor bh,bh
   int 0x10        
-  mov cx,#8
+  mov cx,#5
   mov bx,#0x0007
-  mov bp,#msg5
+  mov bp,#msg6
   mov ax,#0x1301
   int 0x10 
   mov di,#0x80
   mov bx,(di)
   call print_bx
+
+  mov ah,#0x03
+  xor bh,bh
+  int 0x10 
+  mov cx,#1
+  mov bx,#0x0007
+  mov bp,#msg7
+  mov ax,#0x1301
+  int 0x10    
   call print_nl
+
 
   mov ah,#0x03
   xor bh,bh
   int 0x10        
-  mov cx,#9
+  mov cx,#6
   mov bx,#0x0007
-  mov bp,#msg6
+  mov bp,#msg8
   mov ax,#0x1301
   int 0x10 
   mov di,#0x82
@@ -175,9 +188,9 @@ print_hd:
   mov ah,#0x03
   xor bh,bh
   int 0x10        
-  mov cx,#11
+  mov cx,#8
   mov bx,#0x0007
-  mov bp,#msg7
+  mov bp,#msg9
   mov ax,#0x1301
   int 0x10 
   mov di,#0x8e
@@ -218,17 +231,24 @@ msg2:
 	.byte 13,10,13,10	
 
 msg3:
-    .ascii "Cursor Position:"
+    .ascii "Cursor POS:"
 	 
 msg4:
-    .ascii "Extend Memory Size(KB):"
+    .ascii "Memory SIZE:"
 	 
 msg5:
-    .ascii "HD cyls:"	 
+	.ascii "KB"
+
 msg6:
-    .ascii "HD heads:"
+    .ascii "Cyls:"	 
+
 msg7:
-    .ascii "HD Sectors:"
+	.ascii "A"
+
+msg8:
+    .ascii "Heads:"
+msg9:
+    .ascii "Sectors:"
 
 .text
 endtext:
