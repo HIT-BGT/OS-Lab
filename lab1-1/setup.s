@@ -63,88 +63,50 @@ _start:
     call print_nl
 
 ! Print "Cursor POS:"
-	mov	ax,#SETUPSEG
-	mov	es,ax
-	mov	ah,#0x03		! read cursor pos
-	xor	bh,bh
-	int	0x10
-	mov	cx,#11
-	mov	bx,#0x0007		! page 0, attribute 7 (normal)
-	mov	bp,#cursor
-	mov	ax,#0x1301		! write string, move cursor
-	int	0x10
+	push #11
+	push #cursor
+	call print_string
+
 ! Print cusor pos
 	mov bp, #0x00
 	call print_hex
 	call print_nl
 
 ! Print "Memory SIZE"
-	mov	ah,#0x03		! read cursor pos
-	xor	bh,bh
-	int	0x10
-	mov	cx,#12
-	mov	bx,#0x0007		! page 0, attribute 7 (normal)
-	mov	bp,#memory
-	mov	ax,#0x1301		! write string, move cursor
-	int	0x10
+	push #12
+	push #memory
+	call print_string
 !Print memory size
 	mov bp, #0x02
 	call print_hex
 !Print KB
-	mov	ah,#0x03		! read cursor pos
-	xor	bh,bh
-	int	0x10
-	mov	cx,#2
-	mov	bx,#0x0007		! page 0, attribute 7 (normal)
-	mov	bp,#KB
-	mov	ax,#0x1301		! write string, move cursor
-	int	0x10
+	push #2
+	push #KB
+	call print_string
 	call print_nl
 
 ! Print "Cyls:"
-	mov	ax,#SETUPSEG
-	mov	es,ax
-	mov	ah,#0x03		! read cursor pos
-	xor	bh,bh
-	int	0x10
-	mov	cx,#5
-	mov	bx,#0x0007		! page 0, attribute 7 (normal)
-	mov	bp,#cyls
-	mov	ax,#0x1301		! write string, move cursor
-	int	0x10
+	push #5
+	push #cyls
+	call print_string
 ! Print cyls:
 	mov bp, #0x04
 	call print_hex
 	call print_nl
 
 ! Print "Heads:"
-	mov	ax,#SETUPSEG
-	mov	es,ax
-	mov	ah,#0x03		! read cursor pos
-	xor	bh,bh
-	int	0x10
-	mov	cx,#6
-	mov	bx,#0x0007		! page 0, attribute 7 (normal)
-	mov	bp,#heads
-	mov	ax,#0x1301		! write string, move cursor
-	int	0x10
+	push #6
+	push #heads
+	call print_string
 ! Print heads:
 	mov bp, #0x06
 	call print_hex
 	call print_nl
 
-
 ! Print "Sectors:"
-	mov	ax,#SETUPSEG
-	mov	es,ax
-	mov	ah,#0x03		! read cursor pos
-	xor	bh,bh
-	int	0x10
-	mov	cx,#8
-	mov	bx,#0x0007		! page 0, attribute 7 (normal)
-	mov	bp,#_sectors
-	mov	ax,#0x1301		! write string, move cursor
-	int	0x10
+	push #8
+	push #_sectors
+	call print_string
 ! Print sectors:
 	mov bp, #0x12
 	call print_hex
@@ -152,6 +114,22 @@ _start:
 
 inf_loop:
 	jmp inf_loop
+
+print_string:
+	mov	ax,#SETUPSEG
+	mov	es,ax
+	mov	ah,#0x03		! read cursor pos
+	xor	bh,bh
+	int	0x10
+	add esp, #4
+	mov cx, (esp)
+	mov	bx,#0x0007
+	sub esp, #2
+	mov bp, (esp)
+	sub esp, #2
+	mov ax,#0x1301
+	int 0x10
+	ret
 
 print_hex:
     mov	cx,#4 		! 4 hex numbers
