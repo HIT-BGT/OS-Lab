@@ -1,6 +1,31 @@
 #ifndef _UNISTD_H
 #define _UNISTD_H
 
+struct task_queue_node
+{
+	struct task_struct* task_ptr;
+	struct task_queue_node* next;
+};
+
+typedef struct task_queue_node task_node;
+
+struct semaphore
+{
+	int* val;
+	char name[30];
+	task_node* wait_queue_head;
+};
+
+typedef struct semaphore sem_t;
+
+struct sem_queue_node
+{
+	sem_t* sem_ptr;
+	struct sem_queue_node* next;
+};
+
+typedef struct sem_queue_node sem_node;
+
 /* ok, this may be a joke, but I'm working on it */
 #define _POSIX_VERSION 198808L
 
@@ -129,8 +154,12 @@
 #define __NR_ssetmask	69
 #define __NR_setreuid	70
 #define __NR_setregid	71
-#define __NR_iam		72
-#define __NR_whoami		73
+#define __NR_whoami		72
+#define __NR_iam		73
+#define __NR_sem_open	74
+#define __NR_sem_wait	75
+#define __NR_sem_post 	76
+#define __NR_sem_unlink	77
 
 #define _syscall0(type,name) \
 type name(void) \
