@@ -58,13 +58,13 @@ int sys_sem_wait(sem_t* sem){
 		for (cur_task_ptr=sem->wait_queue_head; cur_task_ptr!=NULL; cur_task_ptr=cur_task_ptr->next)
 			pre_task_ptr = cur_task_ptr;
 		cur_task_ptr = (task_node*)malloc(sizeof(task_node));	// Create a new task node
-		cur_task_ptr->task_ptr = current;	// Set the task ptr
+		cur_task_ptr->task_ptr = NULL;	// Set the task ptr
 		cur_task_ptr->next = NULL;	// Set new task node's next
 		if (sem->wait_queue_head==NULL) // No process waiting
 			sem->wait_queue_head = cur_task_ptr;
 		else
 			pre_task_ptr->next = cur_task_ptr;
-		sleep_on(&current);	// Make current process sleep
+		sleep_on(&(cur_task_ptr->task_ptr));	// Make current process sleep
 	}
 	sti();
 	return 0;
