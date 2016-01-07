@@ -35,12 +35,9 @@ int main(int argc, char const *argv[])
 	int i;
 	freopen("data.out","w",stdout);  // Redirect output to a file
 	empty_sem = sem_open(EMPTY_SEM_NAME, O_CREAT, S_IRWXU|S_IRWXG|S_IRWXO, EMPTY_SEM_VALUE); // mode = 00700|00070|00007
-	full_sem = sem_open(FULL_SEM_NAME, O_CREAT, S_IRWXU|S_IRWXG|S_IRWXO, 
-		FULL_SEM_VALUE); // mode = 00700|00070|00007
-	mutex_sem = sem_open(MUTEX_SEM_NAME, O_CREAT, S_IRWXU|S_IRWXG|S_IRWXO, 
-		MUTEX_SEM_VALUE); // mode = 00700|00070|00007
+	full_sem = sem_open(FULL_SEM_NAME, O_CREAT, S_IRWXU|S_IRWXG|S_IRWXO, FULL_SEM_VALUE); // mode = 00700|00070|00007
+	mutex_sem = sem_open(MUTEX_SEM_NAME, O_CREAT, S_IRWXU|S_IRWXG|S_IRWXO, MUTEX_SEM_VALUE); // mode = 00700|00070|00007
 	fd = open("buffer", O_CREAT|O_TRUNC|O_RDWR, 0666);
-	out_fd = open("result.c", O_CREAT|O_TRUNC|O_RDWR, 0666);
 	if (fd<0){
 		printf("Failed to open buffer file!\n");
 		return -1;
@@ -77,7 +74,7 @@ int main(int argc, char const *argv[])
 	sem_unlink(EMPTY_SEM_NAME);
 	sem_unlink(FULL_SEM_NAME);
 	sem_unlink(MUTEX_SEM_NAME);
-	wait(NULL);
+	for (i=0; i<N+1; i++) wait(NULL);
 	return 0;
 }
 

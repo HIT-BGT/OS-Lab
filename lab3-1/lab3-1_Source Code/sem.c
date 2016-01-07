@@ -1,5 +1,4 @@
 #include <unistd.h>
-#include <string.h>	// To use strcmp() and strcpy()
 #include <linux/kernel.h>	// To use malloc()
 #include <asm/segment.h>	// To use get_fs_byte()
 #include <asm/system.h>	// To use get_fs_byte()
@@ -73,13 +72,14 @@ int sys_sem_wait(sem_t* sem){
 int sys_sem_post(sem_t* sem){
 	// printk("sem_post: %s, %d\n", sem->name, *(sem->val));
 	cli();	// Atom operation
+	*(sem->val) = *(sem->val)+1;
 	if (sem->wait_queue_head!=NULL){	// One or more tasks are hanging
+		task_node* first_task_node = sem->wait_queue_head;	// Get the first waiting task node
 		struct task_struct* task_ptr = sem->wait_queue_head->task_ptr;	// Get the first task pointer
 		sem->wait_queue_head = sem->wait_queue_head->next;	// Delete the first waiting task queue node
+		free(first_task_node);
 		wake_up(&task_ptr);	// Wake up the first node
-	}
-	else
-		*(sem->val) = *(sem->val)+1;
+	}		
 	sti();
 	return 0;
 }
@@ -111,6 +111,7 @@ int sys_sem_unlink(const char* name){
 			sem_queue_head = sem_queue_head->next;
 		else
 			pre_sem_ptr->next = cur_sem_ptr->next;
+		free(cur_sem_ptr);
 		return 0;
 	}
 	return -1;
