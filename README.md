@@ -1,6 +1,6 @@
 ## 2015年13级操作系统课程实验
 
-###作者： 白广通（[HIT-BGT](https://github.com/HIT-BGT)）、黄渝光([Yugung](https://github.com/Yugung))
+###作者： 白广通（[gtbai](https://github.com/gtbai)）、黄渝光([Yugung](https://github.com/Yugung))
 
 ### 实验内容
 
